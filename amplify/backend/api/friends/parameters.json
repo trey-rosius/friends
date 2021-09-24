@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "friends",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authfriends83f572cc",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

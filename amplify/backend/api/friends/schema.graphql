@@ -1,0 +1,83 @@
+enum ChatItemType {
+  TEXT
+  IMAGE
+}
+
+type ChatItem @model @auth(rules: [{allow: public}]) @key(name: "byChat", fields: ["chatID"]) {
+  id: ID!
+  senderId: String!
+  receiverId: String!
+  message: String
+  imageUrl: String
+  itemType: ChatItemType!
+  createdOn: AWSDateTime
+  chat: Chat @connection
+  chatID: ID
+}
+
+type Chat @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  receiverId: String!
+  senderId: String!
+  createdOn: AWSDateTime
+  updatedOn: AWSDateTime
+  chatItems: [ChatItem] @connection(keyName: "byChat", fields: ["id"])
+  chatUsers: [ChatUser] @connection(keyName: "byChat", fields: ["id"])
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  username: String!
+  firstName: String!
+  lastName: String
+  isVerified: Boolean
+  profilePicUrl: String
+  email: AWSEmail
+  createdOn: AWSDateTime
+  updatedOn: AWSDateTime
+  posts: [Post] @connection(keyName: "byUser", fields: ["id"])
+  chats: [ChatUser] @connection(keyName: "byUser", fields: ["id"])
+}
+
+enum PostStatus {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type Comment @model @auth(rules: [{allow: public}]) @key(name: "byPost", fields: ["postID"]) {
+  id: ID!
+  createdOn: AWSDateTime!
+  updatedOn: AWSDateTime
+  userId: String
+  post: Post @connection
+  postID: ID
+  commentText: String!
+}
+
+enum PostType {
+  TEXT
+  TEXT_IMAGE
+}
+
+type Post @model @auth(rules: [{allow: public}]) @key(name: "byUsers", fields: ["userID"]) @key(name: "byUser", fields: ["userID"]) {
+  id: ID!
+  content: String!
+  postImageUrl: String
+  status: PostStatus!
+  createdOn: AWSDateTime
+  updatedOn: AWSDateTime
+  comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+  type: PostType!
+  user: User @connection
+  userID: ID
+}
+
+type ChatUser @model(queries: null) @key(name: "byChat", fields: ["chatID", "userID"]) @key(name: "byUser", fields: ["userID", "chatID"]) @auth(rules: [{allow: public}, {allow: public}]) {
+  id: ID!
+  chatID: ID!
+  userID: ID!
+  chat: Chat! @connection(fields: ["chatID"])
+  user: User! @connection(fields: ["userID"])
+}
+ 
