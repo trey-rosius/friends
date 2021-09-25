@@ -16,5 +16,23 @@
         "friends83f572cc": {}
       }
     }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-friends-dev-114615-authRole",
+      "UnauthRoleArn": "arn:aws:iam::132260253285:role/amplify-friends-dev-114615-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::132260253285:role/amplify-friends-dev-114615-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-friends-dev-114615-deployment",
+      "UnauthRoleName": "amplify-friends-dev-114615-unauthRole",
+      "StackName": "amplify-friends-dev-114615",
+      "StackId": "arn:aws:cloudformation:us-east-2:132260253285:stack/amplify-friends-dev-114615/d817dd20-1ded-11ec-a346-0a13123f4c98",
+      "AmplifyAppId": "d1vmt92j06b39u"
+    },
+    "categories": {
+      "auth": {
+        "friends83f572cc": {}
+      }
+    }
   }
 }

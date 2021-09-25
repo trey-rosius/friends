@@ -51,5 +51,11 @@
         ]
       }
     }
+  },
+  "storage": {
+    "s349aa1285": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }

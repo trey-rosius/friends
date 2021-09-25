@@ -1,6 +1,6 @@
 {
     "identityPoolName": "friends83f572cc_identitypool_83f572cc",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "friend83f572cc",
     "userPoolName": "friends83f572cc_userpool_83f572cc",
     "autoVerifiedAttributes": [

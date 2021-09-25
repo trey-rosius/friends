@@ -41,7 +41,8 @@ class _MyAppState extends State<MyApp> {
 
 
     await Amplify.addPlugins([
-     _amplifyDataStore, AmplifyAuthCognito(),
+     _amplifyDataStore,
+      AmplifyAuthCognito(),
       AmplifyAPI(),
       AmplifyStorageS3()
     ]);
@@ -58,9 +59,7 @@ class _MyAppState extends State<MyApp> {
       print(
           'An error occured :$e');
 
-      setState(() {
-        _amplifyConfigured = true;
-      });
+
     }
 
 
