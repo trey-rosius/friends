@@ -1,6 +1,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:friends/profile_repository.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +20,8 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
+
+  User user = User(firstName: '',username: "");
   Text? _getRetrieveErrorWidget() {
     if (_retrieveDataError != null) {
       final Text result = Text(_retrieveDataError!);
@@ -89,7 +92,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    User user = context.watch<User>();
+
     return ChangeNotifierProvider(create: (_)=>PostRepository.instance(),
     child: Consumer(builder: (_,PostRepository postRepo,child){
       return Scaffold(
@@ -106,7 +109,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           )
           ],
         ),
-        body: SingleChildScrollView(
+        body:
+
+        SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 20,horizontal: 30),
             child: Column(
@@ -117,45 +122,59 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      user.profilePicUrl != null ?Flexible(
-                        flex: 1,
-                        child: Container(
+                      FutureProvider<User>(create:(_)=> ProfileRepository.instance().getUserProfile(widget.userId),
+                          initialData: user,
+                          child: Consumer<User>(
+                            builder: (_,User user, child){
 
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 2,color: ThemeColor.primary),
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        child: ClipOval(
-                            child: ClipRRect(
-                              borderRadius:
-                              BorderRadius.circular(
-                                  30),
-                              child:  CachedNetworkImage(
-                                  width: 40.0,
-                                  height: 40.0,
-                                  fit: BoxFit.cover,
-                                  imageUrl: user.profilePicUrl!,
-                                  placeholder: (context,
-                                      url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context,
-                                      url, ex) =>
-                                      CircleAvatar(
-                                        backgroundColor:
-                                        Theme.of(
-                                            context)
-                                            .accentColor,
+                              return user.profilePicUrl != null ?Flexible(
+                                flex: 1,
+                                child: Container(
 
-                                        child: Icon(
-                                          Icons
-                                              .account_circle,
-                                          color:
-                                          Colors.white,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(width: 2,color: ThemeColor.primary),
+                                      borderRadius: BorderRadius.circular(100)
+                                  ),
+                                  child: ClipOval(
+                                      child: ClipRRect(
+                                        borderRadius:
+                                        BorderRadius.circular(
+                                            30),
+                                        child:  CachedNetworkImage(
+                                            width: 40.0,
+                                            height: 40.0,
+                                            fit: BoxFit.cover,
+                                            imageUrl: user.profilePicUrl!,
+                                            placeholder: (context,
+                                                url) =>
+                                                const CircularProgressIndicator(),
+                                            errorWidget: (context,
+                                                url, ex) =>
+                                                CircleAvatar(
+                                                  backgroundColor:
+                                                  Theme.of(
+                                                      context)
+                                                      .colorScheme.secondary,
 
-                                        ),
+                                                  child: const Icon(
+                                                    Icons
+                                                        .account_circle,
+                                                    color:
+                                                    Colors.white,
+
+                                                  ),
+                                                )),
                                       )),
-                            )),
-                      ),) : Flexible(child: SizedBox()),
+                                ),) : Flexible(child: SizedBox());
+
+
+
+
+                            },
+                          )
+                      ),
+
+
                       Flexible(
                         flex: 5,
                         child: Container(
@@ -175,7 +194,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             controller: postRepo.postTextController,
 
 
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                filled: true,
                               fillColor: ThemeColor.textfieldColor,
                               labelText: 'Say something...',
@@ -189,7 +208,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     ],
                   ),
                 ),
-               postRepo.postImageUrl != null ? Container(
+               postRepo.postImageUrl.isNotEmpty ? Container(
                  margin: EdgeInsets.only(left: 60),
                  child: ClipRRect(
                      borderRadius:
@@ -258,6 +277,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
           ),
         ),
+
       );
     },),);
   }

@@ -15,8 +15,7 @@ import 'models/Post.dart';
 import 'nav/fab_bottom_app_bar.dart';
 
 class HomePage extends StatefulWidget {
-const HomePage(this.amplifyConfigured);
-final bool amplifyConfigured;
+
 
 
   @override
@@ -25,6 +24,7 @@ final bool amplifyConfigured;
 
 class _HomePageState extends State<HomePage> {
 String? userId;
+List<Post> posts = [];
 Stream<SubscriptionEvent<Post>>? postStream;
 
 
@@ -32,7 +32,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.amplifyConfigured) {
+
       var provider = context.read<ProfileRepository>();
       var postProvider = context.read<PostRepository>();
       provider.retrieveCurrentUser().then((AuthUser authUser) {
@@ -42,7 +42,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
       });
 
 
-/*
+
    if(userId != null){
      postProvider.queryAllPosts().then((List<Post> posts) {
 
@@ -50,7 +50,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
        postProvider.posts = posts;
      });
    }
-*/
+
 
       postStream = Amplify.DataStore.observe(Post.classType);
       postStream!.listen((event) {
@@ -64,7 +64,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
 
 
    // Amplify.DataStore.clear();
-  }
+
 
 
   int _selectedTabIndex = 0;
@@ -100,7 +100,8 @@ Stream<SubscriptionEvent<Post>>? postStream;
      Scaffold(
       backgroundColor: ThemeColor.black,
       appBar: AppBar(
-
+       elevation: 0.0,
+        backgroundColor: Colors.transparent,
         title: Text("Friends",
           style: TextStyle(fontSize: 20,
               fontFamily: 'SeymourOne',
@@ -125,11 +126,25 @@ Stream<SubscriptionEvent<Post>>? postStream;
       body:   IndexedStack(
         index:_selectedTabIndex ,
         children: [
-          FutureProvider.value(value: postRepo.queryAllPosts(),
+
+         postRepo.posts.isNotEmpty ?
+     ListView.builder(
+
+
+     itemBuilder: (context,index){
+     return PostItem(userId!,postRepo.posts[index]);
+     },itemCount: postRepo.posts.length,)
+    :
+    const Center(
+     child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
+     ),
+
+/*
+          FutureProvider.value(value: PostRepository.instance().queryAllPosts(),
             catchError: (context,error){
               print(error.toString());
             },
-            initialData: [],
+            initialData: posts,
             child: Consumer(builder: (_,List<Post>? posts,child){
               if(posts != null){
                 if(posts.isNotEmpty){
@@ -140,13 +155,15 @@ Stream<SubscriptionEvent<Post>>? postStream;
                       return PostItem(userId!,posts[index]);
                     },itemCount: posts.length,);
                 }else{
-                  return Container(color: Colors.red,);
+                  return const Center(
+                    child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
+                  );
                 }
               }else{
                 return Container(child: Center(child: CircularProgressIndicator(),),);
               }
             },),),
-
+*/
           ProfileScreen(userId!),
           ProfileScreen(userId!),
           ProfileScreen(userId!),

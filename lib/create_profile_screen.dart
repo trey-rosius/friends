@@ -19,8 +19,7 @@ import 'post_repository.dart';
 import 'profile_repository.dart';
 
 class CreateProfileScreen extends StatefulWidget {
-  CreateProfileScreen({required this.email});
-  final String email;
+
 
 
   @override
@@ -185,7 +184,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
     var profileRepo = context.read<ProfileRepository>();
 
-    profileRepo.retrieveEmail().then((String email) => profileRepo.email = email);
+    profileRepo.retrieveEmail().then((String email){
+      print("Email is"+ email);
+      profileRepo.email = email;
+    });
     profileRepo.retrieveCurrentUser().then((AuthUser authUser) {
       print(authUser.username);
       print(authUser.userId);
@@ -479,7 +481,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                         ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
 
                                       ],
-                                      child: const HomePage(true),
+                                      child:HomePage(),
 
                                     );
                                   }));

@@ -75,13 +75,15 @@ class PostItem extends StatelessWidget {
                                  )),
                        )),
                  ),
-                 Column(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text(user.username,style: TextStyle(fontSize: 16,color: Colors.white)),
-                     Text(timeago.format(post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
-                   ],
+                 Expanded(
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       Text(user.username,style: TextStyle(fontSize: 16,color: Colors.white)),
+                       Text(timeago.format(post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
+                     ],
+                   ),
                  )
                ],
              ),
@@ -97,7 +99,7 @@ class PostItem extends StatelessWidget {
 
 
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(colors: [ThemeColor.primary, ThemeColor.secondary],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,

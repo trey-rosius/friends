@@ -24,10 +24,10 @@ class ThemeColor {
   static const Color cardBackground = Color(0xFF434343);
 
 
-  static Shader linearGradient = LinearGradient(
+  static Shader linearGradient = const LinearGradient(
     colors: <Color>[secondary, primary],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-  static Shader linearGradient2 = LinearGradient(
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  static Shader linearGradient2 = const LinearGradient(
     colors: <Color>[color1, color2],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 }

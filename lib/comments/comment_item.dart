@@ -33,57 +33,54 @@ class CommentItem  extends StatelessWidget {
                 },initialData: null,
                 child: Consumer(builder: (_,User? user,child){
                   if(user != null){
-                    return  Container(
-
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                border: Border.all(width: 2,color: ThemeColor.secondary),
-                                borderRadius: BorderRadius.circular(100)
-                            ),
-                            child: ClipOval(
-                                child: ClipRRect(
-                                  borderRadius:
-                                  BorderRadius.circular(
-                                      30),
-                                  child:  CachedNetworkImage(
-                                      width: 30.0,
-                                      height: 30.0,
-                                      fit: BoxFit.cover,
-                                      imageUrl: user.profilePicUrl??"",
-                                      placeholder: (context,
-                                          url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context,
-                                          url, ex) =>
-                                          CircleAvatar(
-                                            backgroundColor:
-                                            Theme.of(
-                                                context)
-                                                .colorScheme.secondary,
-
-                                            child: const Icon(
-                                              Icons
-                                                  .account_circle,
-                                              color:
-                                              Colors.white,
-
-                                            ),
-                                          )),
-                                )),
+                    return  Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2,color: ThemeColor.secondary),
+                              borderRadius: BorderRadius.circular(100)
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(user.username,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
-                              Text(timeago.format(comment.createdOn.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
-                            ],
-                          )
-                        ],
-                      ),
+                          child: ClipOval(
+                              child: ClipRRect(
+                                borderRadius:
+                                BorderRadius.circular(
+                                    30),
+                                child:  CachedNetworkImage(
+                                    width: 30.0,
+                                    height: 30.0,
+                                    fit: BoxFit.cover,
+                                    imageUrl: user.profilePicUrl??"",
+                                    placeholder: (context,
+                                        url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context,
+                                        url, ex) =>
+                                        CircleAvatar(
+                                          backgroundColor:
+                                          Theme.of(
+                                              context)
+                                              .colorScheme.secondary,
+
+                                          child: const Icon(
+                                            Icons
+                                                .account_circle,
+                                            color:
+                                            Colors.white,
+
+                                          ),
+                                        )),
+                              )),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(user.username,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
+                            Text(timeago.format(comment.createdOn.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
+                          ],
+                        )
+                      ],
                     );
                   }else{
                     return  Container(

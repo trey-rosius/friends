@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../create_profile_screen.dart';
 import '../edit_profile_screen.dart';
 import '../profile_repository.dart';
 
@@ -89,12 +90,13 @@ class LoginRepository extends ChangeNotifier{
        retrieveCurrentUser().then((AuthUser authUser) {
 
          print("User id is"+authUser.userId);
+         print("email is"+authUser.username);
           Navigator.push(context, MaterialPageRoute(builder: (context){
             // return RegisterScreen();
             //return LoginScreen();
 
             return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
-              child: EditProfileScreen(authUser.userId),);
+              child: CreateProfileScreen(),);
 
 
           }));
@@ -159,8 +161,6 @@ class LoginRepository extends ChangeNotifier{
           )
       );
 
-
-
        print("is sign up complete" + res.isSignUpComplete.toString());
         isSignUpComplete = res.isSignUpComplete;
         loading =false;
@@ -189,6 +189,7 @@ class LoginRepository extends ChangeNotifier{
             username: username,
             password: password,
           );
+
           loading = false;
           return signInRes.isSignedIn;
         }else{

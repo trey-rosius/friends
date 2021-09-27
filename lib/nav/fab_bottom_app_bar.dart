@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:friends/models/User.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -88,13 +89,9 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         child: InkWell(
           onTap: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){
-              return  FutureProvider(create:(context) => ProfileRepository.instance().getUserProfile(widget.userId),
-                catchError: (context,error){
-                print(error);
-                },
-                initialData: null,
-                child: CreatePostScreen(userId: widget.userId,),
-              );
+
+              return  CreatePostScreen(userId: widget.userId,);
+
             }));
           },
           child: SizedBox(

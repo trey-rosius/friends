@@ -1,4 +1,6 @@
 
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_flutter/amplify.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
@@ -21,108 +23,114 @@ class CommentsScreen extends StatefulWidget {
 }
 
 class _CommentsScreenState extends State<CommentsScreen> {
+  Stream<SubscriptionEvent<Comment>>? commentStream;
 
+  List<Comment> comments = [];
+/*
+  commentStream = Amplify.DataStore.observe(Comment.classType);
+  commentStream!.listen((event) {
+  postProvider.posts.insert(0, event.item);
+  print('Received event of type ' + event.eventType.toString());
+  print('Received post ' + event.item.toString());
+  });
+  */
   Widget buildInput(CommentsRepository commentsRepository) {
 
     return
-      Container(
-        // color: Colors.red,
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-
-            Row(
-              children: <Widget>[
-                // Button send image
-                Container(
-                  margin: EdgeInsets.only(left: 10.0),
-                  decoration: BoxDecoration(
-                      color: ThemeColor.primary,
-                      shape: BoxShape.circle),
-                  child: IconButton(
-                    icon: new Icon(Icons.camera_alt),
-                    //  onPressed: ()=>getImageFromCamera(chatRepo),
-                    onPressed:() {
+          Row(
+            children: <Widget>[
+              // Button send image
+              Container(
+                margin: EdgeInsets.only(left: 10.0),
+                decoration: const BoxDecoration(
+                    color: ThemeColor.primary,
+                    shape: BoxShape.circle),
+                child: IconButton(
+                  icon: new Icon(Icons.camera_alt),
+                  //  onPressed: ()=>getImageFromCamera(chatRepo),
+                  onPressed:() {
 
 
-                    },
-                    color: Colors.white,
-                  ),
+                  },
+                  color: Colors.white,
                 ),
+              ),
 
 
 
 
 
-                // Edit text
-                Flexible(
-                  child: Container(
-                    // margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 15.0),
-                    //  padding: EdgeInsets.symmetric(vertical: 10.0),
+              // Edit text
+              Flexible(
+                child: Container(
+                  // margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 15.0),
+                  //  padding: EdgeInsets.symmetric(vertical: 10.0),
 
 
-                    child: Scrollbar(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        reverse: true,
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: TextField(
-                            maxLines: null,
-                            onChanged: (String text) {
-                              if (text.trim().length > 0) {
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      reverse: true,
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: TextField(
+                          maxLines: null,
+                          onChanged: (String text) {
+                            if (text.trim().isNotEmpty) {
 
-                              } else {
-
-
-
-                              }
-                            },
+                            } else {
 
 
-                            style: TextStyle(color: Colors.white, fontSize: 15.0),
-                            controller: commentsRepository.commentController,
-                            decoration: InputDecoration(
-                              hintText: 'leave a comment....',
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
+
+                            }
+                          },
+
+
+                          style: TextStyle(color: Colors.white, fontSize: 15.0),
+                          controller: commentsRepository.commentController,
+                          decoration: InputDecoration(
+                            hintText: 'leave a comment....',
+                            hintStyle: TextStyle(color: Colors.grey),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
+              ),
 
-                // Button send message
-                Container(
-                  margin: new EdgeInsets.symmetric(horizontal: 8.0),
-                  decoration: BoxDecoration(
-                      color: ThemeColor.secondary,
-                      shape: BoxShape.circle),
-                  child: Center(
-                    child: IconButton(
-                      icon: new Icon(Icons.arrow_forward),
-                      onPressed: () {
-                   if(commentsRepository.commentController.text.isNotEmpty){
-                     commentsRepository.createComment(widget.userId,widget.post).then((_){
-                       commentsRepository.commentController.clear();
-                     });
+              // Button send message
+              Container(
+                margin: new EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                    color: ThemeColor.secondary,
+                    shape: BoxShape.circle),
+                child: Center(
+                  child: IconButton(
+                    icon: new Icon(Icons.arrow_forward),
+                    onPressed: () {
+                 if(commentsRepository.commentController.text.isNotEmpty){
+                   commentsRepository.createComment(widget.userId,widget.post).then((_){
+                     commentsRepository.commentController.clear();
+                   });
 
-                   }
-                      },
-                      color: Colors.white,
-                    ),
+                 }
+                    },
+                    color: Colors.white,
                   ),
                 ),
+              ),
 
-              ],
+            ],
 
 
-            ),
-          ],
-        ),
+          ),
+        ],
       );
   }
   @override
@@ -130,15 +138,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
     var commentsRepo = context.watch<CommentsRepository>();
     return Scaffold(
       backgroundColor: ThemeColor.black,
-      appBar: AppBar(title: Text("Comments",),centerTitle: true,),
+      appBar: AppBar(title: const Text("Comments",),centerTitle: true,),
       body: Column(
         children: [
-          FutureProvider.value(value: CommentsRepository.instance().queryAllCommentsForPost(widget.post.id),
-            catchError: (context,error){
-            print(error.toString());
-            },
-            initialData: [],
-            child: Consumer(builder: (key,List<Comment>? commentList, child){
+          FutureProvider<List<Comment>>(create:(_)=> CommentsRepository.instance().queryAllCommentsForPost(widget.post.id),
+
+            initialData:comments,
+            child: Consumer<List<Comment>>(builder: (key,List<Comment>? commentList, child){
                 if(commentList != null){
                  print("in here"+commentList.toString());
                   return Flexible(
@@ -200,13 +206,15 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                                                 )),
                                                       )),
                                                 ),
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(user.username,style: const TextStyle(fontSize: 16,color: Colors.white)),
-                                                    Text(timeago.format(widget.post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
-                                                  ],
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(user.username,style: const TextStyle(fontSize: 16,color: Colors.white)),
+                                                      Text(timeago.format(widget.post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),

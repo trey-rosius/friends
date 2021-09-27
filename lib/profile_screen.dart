@@ -237,6 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
+          /*
           FutureProvider.value(value: postRepo.queryAllUserPosts(widget.userId),
 
           catchError: (context,error){
@@ -260,6 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }
             },),)
+
+           */
         ],
       ),
     );

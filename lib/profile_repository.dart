@@ -175,7 +175,10 @@ class ProfileRepository extends ChangeNotifier {
 
   Future<String> retrieveEmail() async{
     var res = await Amplify.Auth.fetchUserAttributes();
-    return res[4].value;
+    res.forEach((element) {
+      print("element is"+element.value);
+    });
+    return res[3].value;
   }
   Future<AuthUser>retrieveCurrentUser() async{
     AuthUser authUser = await Amplify.Auth.getCurrentUser();

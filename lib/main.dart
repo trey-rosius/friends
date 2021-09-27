@@ -80,9 +80,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
 
-            primaryColor: Color(0xFF1c1c1c),
+            primaryColor: const Color(0xFF1c1c1c),
 
-            accentColor: Color(0XFFf94c84),
+            accentColor: const Color(0XFFf94c84),
             fontFamily: 'Montserrat'
 
 
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
 
           ],
-          child: HomePage(_amplifyConfigured),
+          child: HomePage(),
 
         )
     );

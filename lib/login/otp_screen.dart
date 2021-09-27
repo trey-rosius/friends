@@ -13,6 +13,7 @@ class OtpScreen extends StatefulWidget {
   final String username;
   final String password;
   final String email;
+
   @override
   _OtpScreenState createState() => _OtpScreenState();
 }
@@ -28,7 +29,7 @@ class _OtpScreenState extends State<OtpScreen> {
     return Scaffold(
         backgroundColor: ThemeColor.bgColor,
         appBar: AppBar(
-          title: Text("OTP Screen"),
+          title: const Text("OTP Screen"),
         ),
         body: ChangeNotifierProvider.value(
             value: LoginRepository.instance(),
@@ -105,7 +106,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               width: SizeConfig.screenWidth,
                               height: 50.toHeight,
                               padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment(0.8,
@@ -130,7 +131,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                        // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) {
                                           return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
-                                            child:  CreateProfileScreen(email: widget.email,),
+                                            child:  CreateProfileScreen(),
                                           );
 
                                         }));
