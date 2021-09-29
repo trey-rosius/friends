@@ -1,8 +1,4 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-
-import 'package:amplify_flutter/amplify.dart';
-import 'package:friends/post_item.dart';
-import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
@@ -35,7 +31,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
     super.initState();
 
       var sharedPrefs = context.read<SharedPrefsUtils>();
-      var postProvider = context.read<PostRepository>();
+
     sharedPrefs.getUserId().then((value){
       if(value == null){
         userId = null;
@@ -44,23 +40,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
           userId = value;
         });
         print("userid is"+userId!);
-        postProvider.queryAllPosts().then((List<Post> posts) {
 
-
-          postProvider.posts = posts;
-          print("posts");
-          print("posts"+postProvider.posts.toString());
-        });
-
-        postStream = Amplify.DataStore.observe(Post.classType);
-        postStream!.listen((event) {
-          postProvider.posts.insert(0, event.item);
-          setState(() {
-
-          });
-          print('Received event of type ' + event.eventType.toString());
-          print('Received post ' + event.item.toString());
-        });
       }
     });
 
@@ -105,7 +85,6 @@ late Stream<SubscriptionEvent<Post>>? postStream;
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var sharedPrefs = context.read<SharedPrefsUtils>();
-    var postRepo = context.watch<PostRepository>();
     var profileRepo = context.watch<ProfileRepository>();
     return userId == null ?LoginScreen() :
      Scaffold(
@@ -139,18 +118,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
         index:_selectedTabIndex ,
         children: [
 
-         postRepo.posts.isNotEmpty ?
-     ListView.builder(
-
-
-     itemBuilder: (context,index){
-     return PostItem(userId!,postRepo.posts[index]);
-     },itemCount: postRepo.posts.length,)
-    :
-    const Center(
-     child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
-     ),
-
+         Container(child: Center(child: Text("Welcome to the home screen"),),),
 /*
           FutureProvider.value(value: PostRepository.instance().queryAllPosts(),
             catchError: (context,error){

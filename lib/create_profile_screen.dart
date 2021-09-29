@@ -11,11 +11,6 @@ import 'package:friends/utils/size_config.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'package:uuid/uuid.dart';
-
-import 'comments/comments_repository.dart';
-import 'post_repository.dart';
 import 'profile_repository.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -477,8 +472,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                     return MultiProvider(
                                       providers: [
                                         ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
-                                        ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
-                                        ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
 
                                       ],
                                       child:HomePage(),

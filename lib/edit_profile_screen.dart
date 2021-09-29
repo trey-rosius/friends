@@ -5,13 +5,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:friends/home_page.dart';
-import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'comments/comments_repository.dart';
 import 'utils/app_theme.dart';
 
 
@@ -481,8 +479,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     return MultiProvider(
                                       providers: [
                                         ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
-                                        ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
-                                        ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
+
 
                                       ],
                                       child:HomePage(),

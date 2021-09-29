@@ -8,13 +8,10 @@ import 'package:amplify_flutter/amplify.dart';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:friends/home_page.dart';
-import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
-// Generated in previous step
-import 'comments/comments_repository.dart';
 
 import 'models/ModelProvider.dart';
 import 'amplifyconfiguration.dart';
@@ -35,7 +32,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   final AmplifyDataStore _amplifyDataStore =  AmplifyDataStore(modelProvider: ModelProvider.instance,);
-  bool _amplifyConfigured = false;
   Future<void> _configureAmplify() async {
 
    try{
@@ -50,15 +46,10 @@ class _MyAppState extends State<MyApp> {
 
       // Once Plugins are added, configure Amplify
       await Amplify.configure(amplifyconfig);
-      setState(() {
-        _amplifyConfigured = true;
-
-        print("Amplify has been configured");
-      });
 
     } catch(e) {
-      print(
-          'An error occured :$e');
+    print('an error occured during amplify configuration: $e');
+
 
 
     }
@@ -92,8 +83,6 @@ class _MyAppState extends State<MyApp> {
         home: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
-            ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
-            ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
             ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
 
           ],

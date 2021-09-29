@@ -2,7 +2,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/user_post_item.dart';
 import 'package:friends/utils/app_theme.dart';
@@ -22,7 +21,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    var postRepo = context.watch<PostRepository>();
+
     return Scaffold(
       backgroundColor: ThemeColor.black,
       body: CustomScrollView(
