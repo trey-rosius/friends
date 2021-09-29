@@ -186,15 +186,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
 
 
-    if(Amplify.isConfigured){
+
       var profileRepo = context.read<ProfileRepository>();
 
       profileRepo.getUserProfile(widget.userId);
-    }else{
 
-      print("Amplify hasn't been configured");
-
-    }
 
 
 
