@@ -1,6 +1,5 @@
 
 import 'dart:io';
-import 'package:amplify_flutter/amplify.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(10.0),
-            child: Icon(
+            child: const Icon(
               Icons.account_circle,
               size: 100,
               color: ThemeColor.primary,
@@ -210,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    Size screenSize = MediaQuery.of(context).size;
+
     var profileRepo = context.watch<ProfileRepository>();
 
     return Scaffold(
@@ -219,9 +218,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       appBar: AppBar(
          elevation: 0.0,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor
-          ),
+
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+       ThemeColor.primary,
+          ThemeColor.secondary
+        ],
+
+          )),
           child: FlexibleSpaceBar(
             stretchModes: const <StretchMode>[
               StretchMode.zoomBackground,
@@ -449,12 +456,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: <Widget>[
 
                         Container(
-                          padding: EdgeInsets.only(top: 15.0),
-                          width: screenSize.width / 1.4,
+                          margin: const EdgeInsets.all(20),
+                          width: SizeConfig.screenWidth,
+                          height: 50.toHeight,
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment(0.8, 0.0), // 10% of the width, so there are ten blinds.
+                                colors: [ThemeColor.primary,ThemeColor.secondary], // red to yellow
+                                tileMode: TileMode.clamp// repeats the gradient over the canvas
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+
+                          ),
                           //  color: Theme.of(context).primaryColor,
 
-                          child: ElevatedButton(
-                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(ThemeColor.secondary)),
+                          child: TextButton(
+
                             onPressed: () {
 
 
@@ -496,11 +516,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                             },
 
-                            child:Padding(
-                              padding:  EdgeInsets.all(15.0),
-                              child:  Text(
-                                  "Save Profile Information",
-                                  ),
+                            child:  Text(
+                              "Save Profile",
+                              style: TextStyle(fontSize: 20,color: Colors.white),
                             ),
                           ),
                         ),

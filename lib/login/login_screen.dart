@@ -271,21 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                          ),
                                          child:TextButton(
-/*
-                                           style: ButtonStyle(
 
-                                               elevation: MaterialStateProperty.all(10),
-                                               backgroundColor: MaterialStateProperty.all(ThemeColor.primary),
-                                               shadowColor: MaterialStateProperty.all(ThemeColor.primary),
-                                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                   RoundedRectangleBorder(
-                                                     borderRadius: BorderRadius.circular(18.0),
-
-                                                   )
-                                               )
-                                           ),
-
- */
                                            onPressed: () {
                                              if (_formKey.currentState!.validate()) {
                                                loginRep.login().then((bool isSignedIn){
