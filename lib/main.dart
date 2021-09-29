@@ -10,6 +10,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:friends/home_page.dart';
 import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
+import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
 // Generated in previous step
@@ -93,6 +94,7 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
             ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
             ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
+            ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
 
           ],
           child: HomePage(),

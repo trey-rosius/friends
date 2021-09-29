@@ -2,6 +2,8 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:friends/models/ModelProvider.dart';
+import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
 import '../create_profile_screen.dart';
@@ -85,21 +87,36 @@ class LoginRepository extends ChangeNotifier{
 
 
       if(isSignedIn){
-        print("Google signed In");
-        //retrieveUserAttributes();
-       retrieveCurrentUser().then((AuthUser authUser) {
 
+       retrieveCurrentUser().then((AuthUser authUser) async{
+        SharedPrefsUtils.instance().saveUserId(authUser.userId).then((value) {
+          print("user id saved successfully");
+        });
          print("User id is"+authUser.userId);
-         print("email is"+authUser.username);
-          Navigator.push(context, MaterialPageRoute(builder: (context){
-            // return RegisterScreen();
-            //return LoginScreen();
 
-            return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
-              child: CreateProfileScreen(),);
+        List<User> user = await Amplify.DataStore.query(User.classType, where: User.ID.eq(authUser.userId));
+          if(user[0] != null){
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              // return RegisterScreen();
+              //return LoginScreen();
+
+              return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
+                child: EditProfileScreen(authUser.userId),);
 
 
-          }));
+            }));
+          }else{
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              // return RegisterScreen();
+              //return LoginScreen();
+
+              return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
+                child: CreateProfileScreen(),);
+
+
+            }));
+          }
+
 
 
 

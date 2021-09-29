@@ -1,26 +1,22 @@
 
 import 'dart:io';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
-import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:friends/amplifyconfiguration.dart';
+import 'package:friends/home_page.dart';
+import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'models/ModelProvider.dart';
+import 'comments/comments_repository.dart';
 import 'utils/app_theme.dart';
 
 
 class EditProfileScreen extends StatefulWidget {
-EditProfileScreen(this.userId);
+const EditProfileScreen(this.userId);
 final String userId;
 
 
@@ -474,15 +470,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 form.save();
 
                                 print(profileRepo.profilePic);
-                                print(profileRepo.firstNamesController.text);
-                                print(profileRepo.lastNamesController.text);
+
 
 
 
                                 profileRepo.updateUserProfileDetails(widget.userId).then((_){
 
                                   print("updated to database");
-                                  Navigator.of(context).pop();
+                                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                                    return MultiProvider(
+                                      providers: [
+                                        ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
+                                        ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
+                                        ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
+
+                                      ],
+                                      child:HomePage(),
+
+                                    );
+                                  }));
+
 
                                 });
 

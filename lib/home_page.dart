@@ -1,11 +1,12 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+
 import 'package:amplify_flutter/amplify.dart';
 import 'package:friends/post_item.dart';
 import 'package:friends/post_repository.dart';
 import 'package:friends/profile_repository.dart';
 import 'package:friends/profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
+import 'package:friends/utils/shared_prefs.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 String? userId;
 List<Post> posts = [];
-Stream<SubscriptionEvent<Post>>? postStream;
+late Stream<SubscriptionEvent<Post>>? postStream;
 
 
   @override
@@ -33,37 +34,40 @@ Stream<SubscriptionEvent<Post>>? postStream;
     // TODO: implement initState
     super.initState();
 
-      var provider = context.read<ProfileRepository>();
+      var sharedPrefs = context.read<SharedPrefsUtils>();
       var postProvider = context.read<PostRepository>();
-      provider.retrieveCurrentUser().then((AuthUser authUser) {
+    sharedPrefs.getUserId().then((value){
+      if(value == null){
+        userId = null;
+      }else{
         setState(() {
-          userId = authUser.userId;
+          userId = value;
         });
-      });
+        print("userid is"+userId!);
+        postProvider.queryAllPosts().then((List<Post> posts) {
+
+
+          postProvider.posts = posts;
+          print("posts");
+          print("posts"+postProvider.posts.toString());
+        });
+
+        postStream = Amplify.DataStore.observe(Post.classType);
+        postStream!.listen((event) {
+          postProvider.posts.insert(0, event.item);
+          setState(() {
+
+          });
+          print('Received event of type ' + event.eventType.toString());
+          print('Received post ' + event.item.toString());
+        });
+      }
+    });
 
 
 
-   if(userId != null){
-     postProvider.queryAllPosts().then((List<Post> posts) {
-
-       print(posts.toString());
-       postProvider.posts = posts;
-     });
-   }
-
-
-      postStream = Amplify.DataStore.observe(Post.classType);
-      postStream!.listen((event) {
-        postProvider.posts.insert(0, event.item);
-        print('Received event of type ' + event.eventType.toString());
-        print('Received post ' + event.item.toString());
-      });
     }
 
-
-
-
-   // Amplify.DataStore.clear();
 
 
 
@@ -83,7 +87,14 @@ Stream<SubscriptionEvent<Post>>? postStream;
   }
 
 
+@override
+  void dispose() {
 
+    // TODO: implement dispose
+    super.dispose();
+   // postStream.ca
+
+  }
 
 
 
@@ -93,7 +104,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    var sharedPrefs = context.read<SharedPrefsUtils>();
     var postRepo = context.watch<PostRepository>();
     var profileRepo = context.watch<ProfileRepository>();
     return userId == null ?LoginScreen() :
@@ -112,6 +123,7 @@ Stream<SubscriptionEvent<Post>>? postStream;
             color: Colors.white,
               icon: Icon(Icons.login), onPressed: (){
             profileRepo.signOut().then((bool signOut){
+              sharedPrefs.deleteAllKeys();
               if(signOut){
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return LoginScreen();
