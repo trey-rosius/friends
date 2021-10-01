@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                      child: BackdropFilter(
                        filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
                        child:  Container(
-                         height:  SizeConfig.screenHeight!/1.8,
+                         height:  SizeConfig.screenHeight!/1.6,
                          margin: EdgeInsets.symmetric(horizontal: 20),
                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
                          decoration: BoxDecoration(
