@@ -2,15 +2,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:friends/profile_repository.dart';
+import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/user_post_item.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:friends/utils/size_config.dart';
 import 'edit_profile_screen.dart';
-import 'models/Post.dart';
-import 'models/User.dart';
+import '../models/Post.dart';
+import '../models/User.dart';
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(this.userId);
   final String userId;

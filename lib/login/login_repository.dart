@@ -6,9 +6,9 @@ import 'package:friends/models/ModelProvider.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
-import '../create_profile_screen.dart';
-import '../edit_profile_screen.dart';
-import '../profile_repository.dart';
+import '../profile/create_profile_screen.dart';
+import '../profile/edit_profile_screen.dart';
+import '../profile/profile_repository.dart';
 
 class LoginRepository extends ChangeNotifier{
 

@@ -8,7 +8,7 @@ import 'package:amplify_flutter/amplify.dart';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:friends/home_page.dart';
-import 'package:friends/profile_repository.dart';
+import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 

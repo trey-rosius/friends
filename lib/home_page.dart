@@ -1,6 +1,6 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-import 'package:friends/profile_repository.dart';
-import 'package:friends/profile_screen.dart';
+import 'package:friends/profile/profile_repository.dart';
+import 'package:friends/profile/profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:friends/utils/size_config.dart';

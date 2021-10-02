@@ -9,7 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 
 import 'package:uuid/uuid.dart';
 
-import 'models/User.dart';
+import '../models/User.dart';
 
 class ProfileRepository extends ChangeNotifier {
 
