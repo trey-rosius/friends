@@ -8,6 +8,7 @@ import 'package:amplify_flutter/amplify.dart';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:friends/home_page.dart';
+import 'package:friends/posts/post_respository.dart';
 import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
@@ -83,6 +84,7 @@ class _MyAppState extends State<MyApp> {
         home: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
+            ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
             ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
 
           ],

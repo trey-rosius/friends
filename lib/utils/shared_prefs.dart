@@ -6,6 +6,7 @@ class SharedPrefsUtils extends ChangeNotifier{
   SharedPrefsUtils.instance() :_prefs = SharedPreferences.getInstance();
 
   Future<void>saveUserId(String userId){
+
    return  _prefs.then((SharedPreferences sharedPreferences) {
       sharedPreferences.setString(userid, userId);
     });

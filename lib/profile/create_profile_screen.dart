@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:friends/home_page.dart';
+import 'package:friends/posts/post_respository.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:friends/utils/size_config.dart';
@@ -462,7 +463,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                             return MultiProvider(
                                               providers: [
                                                 ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
+                                                ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
                                                 ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
+
                                               ],
                                               child:HomePage(),
 

@@ -1,4 +1,6 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'package:friends/posts/post_item.dart';
+import 'package:friends/posts/post_respository.dart';
 import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/profile/profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
@@ -85,6 +87,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     var sharedPrefs = context.read<SharedPrefsUtils>();
+    var postRepo = context.watch<PostRepository>();
     var profileRepo = context.watch<ProfileRepository>();
     return userId == null ?LoginScreen() :
      Scaffold(
@@ -119,7 +122,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
         children: [
 
          Container(child: Center(child: Text("Welcome to the home screen"),),),
-/*
+
           FutureProvider.value(value: PostRepository.instance().queryAllPosts(),
             catchError: (context,error){
               print(error.toString());
@@ -143,7 +146,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
                 return Container(child: Center(child: CircularProgressIndicator(),),);
               }
             },),),
-*/
+
           ProfileScreen(userId!),
           ProfileScreen(userId!),
           ProfileScreen(userId!),
