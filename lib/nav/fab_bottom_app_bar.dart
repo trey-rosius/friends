@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:friends/posts/create_post.dart';
 
 import 'package:friends/utils/app_theme.dart';
 
@@ -86,6 +87,9 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         child: InkWell(
           onTap: (){
 
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              return  CreatePostScreen( userId: widget.userId,);
+            }));
           },
           child: SizedBox(
             height: 100,

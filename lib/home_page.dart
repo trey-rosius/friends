@@ -185,34 +185,7 @@ Future<void> _configureAmplify() async {
             itemBuilder: (context,index){
               return PostItem(userId!,postRepo.posts[index]);
             },itemCount: postRepo.posts.length,) : Container(child: Text("No posts available"),),
-/*
-               FutureProvider.value(value: getPost(postRepo),
-                 initialData: _posts,
-                 catchError: (context,error){
-                 print(error.toString());
-                 },
-                 child:Consumer(builder: (_,List<Post> ?posts,child,){
-                  if(posts != null){
-                    return    posts.isNotEmpty ?
-                   ListView.builder(
 
-
-                      itemBuilder: (context,index){
-                        return PostItem(userId!,posts[index]);
-                      },itemCount: posts.length,) :
-
-                    const Center(
-                        child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
-                    );
-
-                 }else{
-                    return Container(child:Center(child:CircularProgressIndicator()));
-                   }
-                 },)
-               ),
-
-
- */
 
 
 
