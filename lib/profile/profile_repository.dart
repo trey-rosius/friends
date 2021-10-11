@@ -4,6 +4,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
+import 'package:friends/models/Post.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 
@@ -29,7 +30,15 @@ class ProfileRepository extends ChangeNotifier {
   bool _logout = false;
 
   String get email => _email;
+  List<Post> _posts = [];
 
+
+  List<Post> get posts => _posts;
+
+  set posts(List<Post> value) {
+    _posts = value;
+    notifyListeners();
+  }
   set email(String value) {
     _email = value;
     notifyListeners();

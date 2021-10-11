@@ -28,41 +28,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Future<void> _initializeApp() async{
-    await _configureAmplify();
-  }
-
-  final AmplifyDataStore _amplifyDataStore =  AmplifyDataStore(modelProvider: ModelProvider.instance,);
-  Future<void> _configureAmplify() async {
-
-   try{
-
-
-    await Amplify.addPlugins([
-     _amplifyDataStore,
-      AmplifyAuthCognito(),
-      AmplifyAPI(),
-      AmplifyStorageS3()
-    ]);
-
-      // Once Plugins are added, configure Amplify
-      await Amplify.configure(amplifyconfig);
-
-    } catch(e) {
-    print('an error occured during amplify configuration: $e');
-
-
-
-    }
-
-
-  }
 
 
   @override
   void initState() {
     // TODO: implement initState
-    _initializeApp();
+
     super.initState();
 
   }
@@ -85,7 +56,8 @@ class _MyAppState extends State<MyApp> {
           providers: [
             ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
             ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
-            ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
+            ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance())
+
 
           ],
           child: HomePage(),
