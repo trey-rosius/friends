@@ -86,6 +86,15 @@ class PostRepository extends ChangeNotifier{
     List<Post> posts = await Amplify.DataStore.query(Post.classType,sortBy: [Post.CREATEDON.descending()]);
     return posts;
   }
+  Future<List<Post>>paginatePosts(int page) async{
+    List<Post> posts = await Amplify.DataStore.query(Post.classType,sortBy: [Post.CREATEDON.descending()],
+                 pagination: QueryPagination(page:page, limit:100));
+    return posts;
+  }
+  Future<List<Post>>getSinglePost(String postID) async{
+    List<Post> posts = await Amplify.DataStore.query(Post.classType,where: Post.ID.eq(postID));
+    return posts;
+  }
   Future<List<Post>>queryAllUserPosts(String userId) async{
     List<Post> posts = await Amplify.DataStore.query(Post.classType,
         where: Post.USERID.eq(userId),
@@ -113,8 +122,8 @@ class PostRepository extends ChangeNotifier{
     await Amplify.DataStore.save(newUser);
   }
  */
-  Future<User> retrieveUser() async{
-    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq('456090a5-e6a1-4a59-b945-a2d85ac2748f')))[0];
+  Future<User> retrieveUser(String userId) async{
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId)))[0];
     return user;
 
   }
