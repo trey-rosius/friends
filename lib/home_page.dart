@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -35,7 +37,8 @@ String? userId;
  Future<List<Post>>getPost(postRepo) async{
   return  _posts = await postRepo.queryAllPosts();
  }
-late Stream<SubscriptionEvent<Post>>? postStream;
+ int count = 0;
+late StreamSubscription postStream;
 Future<void> _initializeApp() async{
   await _configureAmplify();
 }
@@ -63,6 +66,26 @@ Future<void> _configureAmplify() async {
         print("something posts "+value.toString());
 
       });
+      postStream = Amplify.DataStore.observe(Post.classType).listen((event) {
+        if(event.eventType != EventType.create){
+          return;
+        }
+        if(postRepo.posts[0].id != event.item.id){
+
+          postRepo.posts.insert(0, event.item);
+          print('Received event of type ' + event.eventType.toString());
+          print('Received post ' + event.item.toString());
+
+        }
+
+
+
+
+
+      });
+
+
+
     }else{
       print("Amplify not configured");
     }
@@ -127,7 +150,7 @@ Future<void> _configureAmplify() async {
 
     // TODO: implement dispose
     super.dispose();
-   // postStream.ca
+    postStream.cancel();
 
   }
 
