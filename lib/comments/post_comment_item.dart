@@ -1,27 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:friends/comments/comments_repository.dart';
-import 'package:friends/comments/comments_screen.dart';
-import 'package:friends/models/ModelProvider.dart';
 import 'package:friends/models/Post.dart';
+import 'package:friends/models/User.dart';
 import 'package:friends/profile/profile_repository.dart';
 
 import 'package:friends/utils/app_theme.dart';
-import 'package:friends/utils/size_config.dart';
-import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:provider/provider.dart';
 
-
-class PostItem extends StatelessWidget {
-  PostItem(this.userId,this.post);
-  final String userId;
+class PostCommentItem extends StatelessWidget{
+  PostCommentItem(this.post);
   final Post post;
 
 
   @override
   Widget build(BuildContext context) {
-
+    // TODO: implement buildPostItem
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child:  Container(
@@ -63,9 +57,9 @@ class PostItem extends StatelessWidget {
                                             backgroundColor:
                                             Theme.of(
                                                 context)
-                                                .accentColor,
+                                                .colorScheme.secondary,
 
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons
                                                   .account_circle,
                                               color:
@@ -80,7 +74,7 @@ class PostItem extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(user.firstName,style: TextStyle(fontSize: 16,color: Colors.white)),
+                                Text(user.username,style: const TextStyle(fontSize: 16,color: Colors.white)),
                                 Text(timeago.format(post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
                               ],
                             ),
@@ -89,7 +83,7 @@ class PostItem extends StatelessWidget {
                       ),
                     );
                   }else{
-                    return  Container(
+                    return Container(
                         height: 40,
                         width: 40,
                         child: CircularProgressIndicator()
@@ -134,7 +128,7 @@ class PostItem extends StatelessWidget {
                               imageUrl: post.postImageUrl??"",
                               placeholder: (context,
                                   url) =>
-                                  CircularProgressIndicator(),
+                              const CircularProgressIndicator(),
                               errorWidget: (context,
                                   url, ex) =>
                                   Container(
@@ -146,45 +140,7 @@ class PostItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                  InkWell(
-                    onTap: (){
 
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),
-                            child: CommentsScreen(userId: userId,post: post,));
-                      }));
-
-
-                    },
-                    child: Container(
-                      padding:EdgeInsets.all(15),
-                      margin: EdgeInsets.all(10),
-                      width: SizeConfig.screenWidth!/2.5,
-
-
-                      decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-
-                      child: Row(
-
-                        children: [
-                          SvgPicture.asset(
-                            'assets/svg/chats.svg',
-                            fit: BoxFit.cover,
-                            height: 20,
-                            width: 20,
-                            color: Colors.white,
-
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text("Comments",style: TextStyle(color: Colors.white),),)
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -196,4 +152,5 @@ class PostItem extends StatelessWidget {
 
     );
   }
+
 }

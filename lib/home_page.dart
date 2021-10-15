@@ -67,9 +67,7 @@ Future<void> _configureAmplify() async {
 
       });
       postStream = Amplify.DataStore.observe(Post.classType).listen((event) {
-        if(event.eventType != EventType.create){
-          return;
-        }
+
         if(postRepo.posts[0].id != event.item.id){
 
           postRepo.posts.insert(0, event.item);

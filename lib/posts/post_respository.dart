@@ -166,7 +166,7 @@ class PostRepository extends ChangeNotifier{
     UploadFileResult result  =  await Amplify.Storage.uploadFile(
     key: uuid,
     local: croppedFile,
-    options: options
+    options: options,
     );
     postImageKey  = result.key;
     print("the key is "+postImageKey);
