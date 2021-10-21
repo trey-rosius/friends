@@ -6,9 +6,9 @@ import 'package:friends/models/ModelProvider.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
-import '../create_profile_screen.dart';
-import '../edit_profile_screen.dart';
-import '../profile_repository.dart';
+import '../profile/create_profile_screen.dart';
+import '../profile/edit_profile_screen.dart';
+import '../profile/profile_repository.dart';
 
 class LoginRepository extends ChangeNotifier{
 
@@ -84,18 +84,18 @@ class LoginRepository extends ChangeNotifier{
 
 
         isSignedIn = res.isSignedIn;
-
-
       if(isSignedIn){
 
-       retrieveCurrentUser().then((AuthUser authUser) async{
-        SharedPrefsUtils.instance().saveUserId(authUser.userId).then((value) {
-          print("user id saved successfully");
-        });
-         print("User id is"+authUser.userId);
 
-        List<User> user = await Amplify.DataStore.query(User.classType, where: User.ID.eq(authUser.userId));
-          if(user[0] != null){
+        googleLoading = false;
+        retrieveCurrentUser().then((AuthUser authUser) async{
+          SharedPrefsUtils.instance().saveUserId(authUser.userId).then((value) {
+            print("user id saved successfully");
+          });
+          print("User id is"+authUser.userId);
+
+          List<User> user = await Amplify.DataStore.query(User.classType, where: User.ID.eq(authUser.userId));
+          if(user.isNotEmpty){
             Navigator.push(context, MaterialPageRoute(builder: (context){
               // return RegisterScreen();
               //return LoginScreen();
@@ -121,10 +121,12 @@ class LoginRepository extends ChangeNotifier{
 
 
         });
-        googleLoading = false;
+
+
       }else{
         googleLoading = false;
       }
+
     } on AmplifyException catch (e) {
       print(e.message);
       googleLoading = false;

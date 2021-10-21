@@ -1,17 +1,24 @@
-import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'dart:async';
 
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:amplify_flutter/amplify.dart';
-import 'package:friends/post_item.dart';
-import 'package:friends/post_repository.dart';
-import 'package:friends/profile_repository.dart';
-import 'package:friends/profile_screen.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:friends/posts/post_item.dart';
+import 'package:friends/posts/post_respository.dart';
+import 'package:friends/profile/profile_repository.dart';
+import 'package:friends/profile/profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
+import 'amplifyconfiguration.dart';
 import 'login/login_screen.dart';
+import 'models/ModelProvider.dart';
 import 'models/Post.dart';
 import 'nav/fab_bottom_app_bar.dart';
 
@@ -25,17 +32,82 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 String? userId;
-List<Post> posts = [];
-late Stream<SubscriptionEvent<Post>>? postStream;
+ List<Post> _posts = [];
+
+ Future<List<Post>>getPost(postRepo) async{
+  return  _posts = await postRepo.queryAllPosts();
+ }
+ int count = 0;
+late StreamSubscription postStream;
+Future<void> _initializeApp() async{
+  await _configureAmplify();
+}
+
+final AmplifyDataStore _amplifyDataStore =  AmplifyDataStore(modelProvider: ModelProvider.instance,);
+Future<void> _configureAmplify() async {
+
+  try{
+
+
+    await Amplify.addPlugins([
+      _amplifyDataStore,
+      AmplifyAuthCognito(),
+      AmplifyAPI(),
+      AmplifyStorageS3()
+    ]);
+
+    // Once Plugins are added, configure Amplify
+    await Amplify.configure(amplifyconfig);
+
+    var postRepo = context.read<PostRepository>();
+    if(Amplify.isConfigured) {
+      postRepo.queryAllPosts().then((value) {
+        postRepo.posts = value;
+        print("something posts "+value.toString());
+
+      });
+      postStream = Amplify.DataStore.observe(Post.classType).listen((event) {
+
+        if(postRepo.posts[0].id != event.item.id){
+
+          postRepo.posts.insert(0, event.item);
+          print('Received event of type ' + event.eventType.toString());
+          print('Received post ' + event.item.toString());
+
+        }
+
+
+
+
+
+      });
+
+
+
+    }else{
+      print("Amplify not configured");
+    }
+
+  } catch(e) {
+    print('an error occured during amplify configuration: $e');
+
+
+
+  }
+
+
+}
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    _initializeApp();
       var sharedPrefs = context.read<SharedPrefsUtils>();
-      var postProvider = context.read<PostRepository>();
+
+
+
     sharedPrefs.getUserId().then((value){
       if(value == null){
         userId = null;
@@ -44,23 +116,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
           userId = value;
         });
         print("userid is"+userId!);
-        postProvider.queryAllPosts().then((List<Post> posts) {
 
-
-          postProvider.posts = posts;
-          print("posts");
-          print("posts"+postProvider.posts.toString());
-        });
-
-        postStream = Amplify.DataStore.observe(Post.classType);
-        postStream!.listen((event) {
-          postProvider.posts.insert(0, event.item);
-          setState(() {
-
-          });
-          print('Received event of type ' + event.eventType.toString());
-          print('Received post ' + event.item.toString());
-        });
       }
     });
 
@@ -92,7 +148,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
 
     // TODO: implement dispose
     super.dispose();
-   // postStream.ca
+    postStream.cancel();
 
   }
 
@@ -104,11 +160,15 @@ late Stream<SubscriptionEvent<Post>>? postStream;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var sharedPrefs = context.read<SharedPrefsUtils>();
-    var postRepo = context.watch<PostRepository>();
+    var postRepo = context.read<PostRepository>();
+    var sharedPrefs = context.watch<SharedPrefsUtils>();
+
+
     var profileRepo = context.watch<ProfileRepository>();
-    return userId == null ?LoginScreen() :
-     Scaffold(
+    return userId ==null ?LoginScreen() :
+
+
+    Scaffold(
       backgroundColor: ThemeColor.black,
       appBar: AppBar(
        elevation: 0.0,
@@ -123,7 +183,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
             color: Colors.white,
               icon: Icon(Icons.login), onPressed: (){
             profileRepo.signOut().then((bool signOut){
-              sharedPrefs.deleteAllKeys();
+             sharedPrefs.deleteAllKeys();
               if(signOut){
                 Navigator.push(context, MaterialPageRoute(builder: (context){
                   return LoginScreen();
@@ -139,43 +199,17 @@ late Stream<SubscriptionEvent<Post>>? postStream;
         index:_selectedTabIndex ,
         children: [
 
-         postRepo.posts.isNotEmpty ?
-     ListView.builder(
+
+          postRepo.posts.isNotEmpty ?ListView.builder(
 
 
-     itemBuilder: (context,index){
-     return PostItem(userId!,postRepo.posts[index]);
-     },itemCount: postRepo.posts.length,)
-    :
-    const Center(
-     child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
-     ),
-
-/*
-          FutureProvider.value(value: PostRepository.instance().queryAllPosts(),
-            catchError: (context,error){
-              print(error.toString());
-            },
-            initialData: posts,
-            child: Consumer(builder: (_,List<Post>? posts,child){
-              if(posts != null){
-                if(posts.isNotEmpty){
-                  return  ListView.builder(
+            itemBuilder: (context,index){
+              return PostItem(userId!,postRepo.posts[index]);
+            },itemCount: postRepo.posts.length,) : Container(child: Text("No posts available"),),
 
 
-                    itemBuilder: (context,index){
-                      return PostItem(userId!,posts[index]);
-                    },itemCount: posts.length,);
-                }else{
-                  return const Center(
-                    child:Text("No Posts Available, please create some",style: TextStyle(color: Colors.white),)
-                  );
-                }
-              }else{
-                return Container(child: Center(child: CircularProgressIndicator(),),);
-              }
-            },),),
-*/
+
+
           ProfileScreen(userId!),
           ProfileScreen(userId!),
           ProfileScreen(userId!),
@@ -198,32 +232,7 @@ late Stream<SubscriptionEvent<Post>>? postStream;
           FABBottomAppBarItem(iconName:'assets/svg/profile.svg', text: 'profile'),
         ],
       ),
-      /*
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          if(_amplifyConfigured) {
-            print("amplify configured");
-            //addBlog();
 
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-            // return RegisterScreen();
-              //return LoginScreen();
-
-              return ChangeNotifierProvider(create: (_)=>ProfileRepository.instance(),
-              child: EditProfileScreen(),);
-
-
-            }));
-          }else{
-            print("amplify NOT configured");
-          }
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-
-
-       */
 
     );
 

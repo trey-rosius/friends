@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
@@ -8,7 +9,7 @@ import 'package:friends/models/ModelProvider.dart';
 
 class CommentsRepository extends ChangeNotifier {
 
-   CommentsRepository.instance();
+  CommentsRepository.instance();
 
 
 
@@ -19,11 +20,19 @@ class CommentsRepository extends ChangeNotifier {
   S3UploadFileOptions? options;
   bool _loading = false;
   String? _userId;
+  List<Comment> _comments = [];
 
+  late StreamSubscription commentsStream;
+  List<Comment> get comments => _comments;
+
+  set comments(List<Comment> value) {
+    _comments = value;
+    notifyListeners();
+  }
 
   String? get userId => _userId;
 
-   set userId(String? value) {
+  set userId(String? value) {
     _userId = value;
     notifyListeners();
   }
@@ -38,6 +47,7 @@ class CommentsRepository extends ChangeNotifier {
     _profilePicKey = value;
     notifyListeners();
   }
+
 
   String get profilePic => _profilePic;
 
@@ -69,11 +79,13 @@ class CommentsRepository extends ChangeNotifier {
   }
 
 
+
   @override
   void dispose() {
     // TODO: implement dispose
 
     commentController.dispose();
+    commentsStream.cancel();
 
 
 
@@ -91,9 +103,7 @@ class CommentsRepository extends ChangeNotifier {
 
   Future<bool> createComment(String userId,Post post) async{
     loading = true;
-    /**
-     * first retrieve user model
-     */
+
     try {
 
 

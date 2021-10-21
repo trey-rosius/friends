@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:friends/create_profile_screen.dart';
+import 'package:friends/profile/create_profile_screen.dart';
 import 'package:friends/utils/app_theme.dart';
 import 'package:friends/utils/validations.dart';
 import 'package:provider/provider.dart';
 import 'package:friends/utils/size_config.dart';
-import '../profile_repository.dart';
+import '../profile/profile_repository.dart';
 import 'login_repository.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -107,17 +107,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               height: 50.toHeight,
                               padding: EdgeInsets.all(10),
                               decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment(0.8,
-                                      0.0), // 10% of the width, so there are ten blinds.
-                                  colors: [
-                                    ThemeColor.primary,
-                                    ThemeColor.secondary
-                                  ], // red to yellow
-                                  tileMode: TileMode
-                                      .repeated, // repeats the gradient over the canvas
-                                ),
+                              color:ThemeColor.primary,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                               ),

@@ -8,13 +8,11 @@ import 'package:amplify_flutter/amplify.dart';
 
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:friends/home_page.dart';
-import 'package:friends/post_repository.dart';
-import 'package:friends/profile_repository.dart';
+import 'package:friends/posts/post_respository.dart';
+import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/utils/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
-// Generated in previous step
-import 'comments/comments_repository.dart';
 
 import 'models/ModelProvider.dart';
 import 'amplifyconfiguration.dart';
@@ -30,47 +28,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Future<void> _initializeApp() async{
-    await _configureAmplify();
-  }
-
-  final AmplifyDataStore _amplifyDataStore =  AmplifyDataStore(modelProvider: ModelProvider.instance,);
-  bool _amplifyConfigured = false;
-  Future<void> _configureAmplify() async {
-
-   try{
-
-
-    await Amplify.addPlugins([
-     _amplifyDataStore,
-      AmplifyAuthCognito(),
-      AmplifyAPI(),
-      AmplifyStorageS3()
-    ]);
-
-      // Once Plugins are added, configure Amplify
-      await Amplify.configure(amplifyconfig);
-      setState(() {
-        _amplifyConfigured = true;
-
-        print("Amplify has been configured");
-      });
-
-    } catch(e) {
-      print(
-          'An error occured :$e');
-
-
-    }
-
-
-  }
 
 
   @override
   void initState() {
     // TODO: implement initState
-    _initializeApp();
+
     super.initState();
 
   }
@@ -93,8 +56,8 @@ class _MyAppState extends State<MyApp> {
           providers: [
             ChangeNotifierProvider(create: (_) => ProfileRepository.instance(),),
             ChangeNotifierProvider(create: (_) => PostRepository.instance(),),
-            ChangeNotifierProvider(create: (_) => CommentsRepository.instance(),),
-            ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance(),),
+            ChangeNotifierProvider(create: (_) => SharedPrefsUtils.instance())
+
 
           ],
           child: HomePage(),

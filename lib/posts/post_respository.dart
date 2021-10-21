@@ -5,13 +5,11 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
+import 'package:friends/models/ModelProvider.dart';
+import 'package:friends/models/Post.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:uuid/uuid.dart';
 
-import 'models/Post.dart';
-import 'models/PostType.dart';
-import 'models/PostStatus.dart';
-import 'models/User.dart';
 
 class PostRepository extends ChangeNotifier{
 
@@ -88,6 +86,15 @@ class PostRepository extends ChangeNotifier{
     List<Post> posts = await Amplify.DataStore.query(Post.classType,sortBy: [Post.CREATEDON.descending()]);
     return posts;
   }
+  Future<List<Post>>paginatePosts(int page) async{
+    List<Post> posts = await Amplify.DataStore.query(Post.classType,sortBy: [Post.CREATEDON.descending()],
+                 pagination: QueryPagination(page:page, limit:100));
+    return posts;
+  }
+  Future<List<Post>>getSinglePost(String postID) async{
+    List<Post> posts = await Amplify.DataStore.query(Post.classType,where: Post.ID.eq(postID));
+    return posts;
+  }
   Future<List<Post>>queryAllUserPosts(String userId) async{
     List<Post> posts = await Amplify.DataStore.query(Post.classType,
         where: Post.USERID.eq(userId),
@@ -101,8 +108,8 @@ class PostRepository extends ChangeNotifier{
     Post oldPost = (await Amplify.DataStore.query(Post.classType,
         where: Post.ID.eq(postId)))[0];
     Post newPost = oldPost.copyWith(id: oldPost.id,
-    createdOn: TemporalDateTime.now(),
-     updatedOn: TemporalDateTime.now());
+        createdOn: TemporalDateTime.now(),
+        updatedOn: TemporalDateTime.now());
 
     await Amplify.DataStore.save(newPost);
   }
@@ -114,10 +121,9 @@ class PostRepository extends ChangeNotifier{
     User newUser = oldUser.copyWith(id: oldUser.id,updatedOn: TemporalDateTime.now(),post: [post]);
     await Amplify.DataStore.save(newUser);
   }
-
  */
-  Future<User> retrieveUser() async{
-    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq('456090a5-e6a1-4a59-b945-a2d85ac2748f')))[0];
+  Future<User> retrieveUser(String userId) async{
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId)))[0];
     return user;
 
   }
@@ -131,57 +137,57 @@ class PostRepository extends ChangeNotifier{
         sourcePath: imageFilePath,
         cropStyle: CropStyle.rectangle,
         aspectRatioPresets: Platform.isAndroid
-            ? [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio4x3,]
+        ? [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio4x3,]
             : [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio4x3,
         ],
         androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            toolbarColor: Theme.of(context).accentColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: true),
-        iosUiSettings: IOSUiSettings(
-          title: 'Crop Image',
-        ));
+        toolbarTitle: 'Crop Image',
+        toolbarColor: Theme.of(context).accentColor,
+        toolbarWidgetColor: Colors.white,
+    initAspectRatio: CropAspectRatioPreset.original,
+    lockAspectRatio: true),
+    iosUiSettings: IOSUiSettings(
+    title: 'Crop Image',
+    ));
     if (croppedFile != null) {
-      print("cropped file is" + croppedFile.path);
+    print("cropped file is" + croppedFile.path);
 
-      Map<String, String> metadata = <String, String>{};
-      metadata['name'] = "user_$uuid";
+    Map<String, String> metadata = <String, String>{};
+    metadata['name'] = "user_$uuid";
 
-      metadata['desc'] = 'post picture ';
-      /**
-       * Prepare to upload croppped image to s3
-       */
-      S3UploadFileOptions  options = S3UploadFileOptions(accessLevel: StorageAccessLevel.guest, metadata: metadata);
-      try {
-        UploadFileResult result  =  await Amplify.Storage.uploadFile(
-            key: uuid,
-            local: croppedFile,
-            options: options
-        );
-        postImageKey  = result.key;
-        print("the key is "+postImageKey);
+    metadata['desc'] = 'post picture ';
+    /**
+     * Prepare to upload croppped image to s3
+     */
+    S3UploadFileOptions  options = S3UploadFileOptions(accessLevel: StorageAccessLevel.guest, metadata: metadata);
+    try {
+    UploadFileResult result  =  await Amplify.Storage.uploadFile(
+    key: uuid,
+    local: croppedFile,
+    options: options,
+    );
+    postImageKey  = result.key;
+    print("the key is "+postImageKey);
 
-        /**
-         * Get url of the uploaded image to display on the frontend
-         *
-         */
-        GetUrlResult resultDownload =
-        await Amplify.Storage.getUrl(key: postImageKey);
-        print(resultDownload.url);
-        postImageUrl = resultDownload.url;
-        loading = false;
+    /**
+     * Get url of the uploaded image to display on the frontend
+     *
+     */
+    GetUrlResult resultDownload =
+    await Amplify.Storage.getUrl(key: postImageKey);
+    print(resultDownload.url);
+    postImageUrl = resultDownload.url;
+    loading = false;
 
-      } on StorageException catch (e) {
-        print("error message is" + e.message);
-        loading= false;
-      }
+    } on StorageException catch (e) {
+    print("error message is" + e.message);
+    loading= false;
+    }
 
     }else{
-      loading = false;
+    loading = false;
     }
   }
 

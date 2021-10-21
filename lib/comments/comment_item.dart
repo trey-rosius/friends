@@ -1,10 +1,10 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:friends/models/ModelProvider.dart';
+import 'package:friends/profile/profile_repository.dart';
 import 'package:friends/utils/size_config.dart';
 import 'package:friends/models/User.dart';
-import 'package:friends/profile_repository.dart';
+
 import 'package:friends/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -76,7 +76,7 @@ class CommentItem  extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(user.username,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
+                            Text(user.firstName,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
                             Text(timeago.format(comment.createdOn.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
                           ],
                         )
