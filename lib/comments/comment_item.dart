@@ -76,7 +76,7 @@ class CommentItem  extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(user.username,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
+                            Text(user.firstName,style: TextStyle(fontSize: 13,color: ThemeColor.secondary)),
                             Text(timeago.format(comment.createdOn.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
                           ],
                         )

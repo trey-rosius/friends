@@ -231,7 +231,7 @@ void dispose(){
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(user.username,style: const TextStyle(fontSize: 16,color: Colors.white)),
+                                                Text(user.firstName,style: const TextStyle(fontSize: 16,color: Colors.white)),
                                                 Text(timeago.format(widget.post.createdOn!.getDateTimeInUtc()),style: TextStyle(color: Colors.grey),)
                                               ],
                                             ),

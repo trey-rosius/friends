@@ -103,9 +103,7 @@ class CommentsRepository extends ChangeNotifier {
 
   Future<bool> createComment(String userId,Post post) async{
     loading = true;
-    /**
-     * first retrieve user model
-     */
+
     try {
 
 
